@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserServiceTest {
+class UserServiceUnitTest {
 
     @Mock
     private UserRepository userRepository; // fake repo
