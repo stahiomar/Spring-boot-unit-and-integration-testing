@@ -1,6 +1,7 @@
 package com.example.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,4 +36,28 @@ class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Omar"));
     }
+
+    @Test
+    void testDeleteUser() throws Exception {
+        // Create a user
+        String response = mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Omar\"}"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // Extract the ID from the JSON response
+        long id = JsonPath.read(response, "$.id");
+
+        // Delete the user
+        mockMvc.perform(delete("/api/users/" + id))
+                .andExpect(status().isOk());
+
+        // Optionally verify the user is gone
+        mockMvc.perform(get("/api/users/" + id))
+                .andExpect(status().isNotFound());
+    }
+
 }

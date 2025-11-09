@@ -21,4 +21,9 @@ public class UserController {
     public User addUser(@RequestBody UserRequest request) {
         return service.addUser(request.getName());
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteUserById(@PathVariable Long id) {
+        service.deleteUserById(id);
+    }
 }
